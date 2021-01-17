@@ -1,0 +1,50 @@
+﻿@using MetaWeatherDemo.ViewModels.Weather
+@model ConsolidatedWeatherViewModel
+
+@{
+    ViewBag.Title = "Weather page";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>Weather forecast at @Model.title </h1>
+            <br />
+            <table>
+                <tr align="right"><td><strong>Time</strong></td><td>&nbsp;</td><td> @string.Format("{0:h:mm tt}", Model.time)</td></tr>
+                <tr align="right"><td><strong>Sunrise</strong></td><td>&nbsp;</td><td>@string.Format("{0:h:mm tt}", @Model.sun_rise)</td></tr>
+                <tr align="right"><td><strong>Sunset</strong></td><td>&nbsp;</td><td>@string.Format("{0:h:mm tt}", @Model.sun_set)</td></tr>
+            </table>
+            <br />
+        </div>
+    </div>
+    <br />
+    <br />
+    <div class="row">
+        @for (int i = 0; i < Model.consolidated_weather.Count; i++)
+        {
+            // Get model for particular day
+            var curModel = Model.consolidated_weather.ElementAt(i);
+
+            // Display information for that day
+            <div class="col-sm-2">
+                <strong>@curModel.applicable_date</strong>
+                <br />
+                <br />
+                <img alt="@curModel.weather_state_name" width="48" height="48" src="@curModel.weather_SVG_URL" />
+                @curModel.weather_state_name
+                <br />
+                <br />
+                <strong>Max: </strong>@curModel.max_temp °C <br />
+                <strong>Min: </strong>@curModel.min_temp °C <br />
+                <strong>Wind: </strong><span>@HttpUtility.HtmlDecode(curModel.wind_direction_compass)</span> @String.Format("{0}mph", Math.Round(curModel.wind_speed)) <br />
+                <strong>Humidity: </strong>@curModel.humidity%<br />
+                <strong>Visibility: </strong>@Math.Round(curModel.visibility, 1) miles<br />
+                <strong>Pressure: </strong>@Math.Round(curModel.air_pressure)mb<br />
+                <strong>Confidence: </strong>@curModel.predictability%<br />
+            </div>
+        }
+    </div>
+
+    <br />
+    <button title="refesh" id="btnRefresh" class="btn btn-primary btn-lg">&#x27F2;</button>
